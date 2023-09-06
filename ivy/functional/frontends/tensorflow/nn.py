@@ -367,6 +367,11 @@ def log_poisson_loss(targets, log_input, compute_full_loss=False, name=None):
 
 
 @to_ivy_arrays_and_back
+def l2_loss(t,name=None):
+    return ivy.l2_loss(t)
+
+
+@to_ivy_arrays_and_back
 def max_pool1d(input, ksize, strides, padding, data_format="NWC", name=None):
     return ivy.max_pool1d(input, ksize, strides, padding, data_format=data_format)
 

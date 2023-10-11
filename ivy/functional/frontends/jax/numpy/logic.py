@@ -310,5 +310,31 @@ def setxor1d(ar1, ar2, assume_unique=False):
     return ret
 
 
+@to_ivy_arrays_and_back
+def unpackbits(x, /, *, axis=None, count=None, bitorder="big"):
+    x = ivy.asarray(x)
+    bits = ivy.arange(8, dtype="uint8")
+    if bitorder == "big":
+        bits = bits[::-1]
+    if axis is None:
+        x = ivy.flatten(x)
+        axis = 0
+    x = ivy.swapaxes(x, axis, -1)
+
+    unpacked = (
+        (x[..., None] & ivy.expand_dims(bits, axis=tuple(range(x.ndim)))) > 0
+    ).astype("uint8")
+    unpacked = ivy.reshape(unpacked, list(unpacked.shape[:-2] + (-1,)))
+    if count is not None:
+        if count > unpacked.shape[-1]:
+            unpacked = ivy.pad(
+                unpacked,
+                [(0, 0)] * (unpacked.ndim - 1) + [(0, count - unpacked.shape[-1])],
+            )
+        else:
+            unpacked = unpacked[..., :count]
+    return ivy.swapaxes(unpacked, axis, -1)
+
+
 alltrue = all
 sometrue = any

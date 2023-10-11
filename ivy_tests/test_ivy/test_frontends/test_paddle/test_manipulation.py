@@ -85,6 +85,31 @@ def _arrays_idx_n_dtypes(draw):
     return xs, input_dtypes, unique_idx
 
 
+# broadcast_tensors_helper
+@st.composite
+def _broadcast_tensors_helper(draw):
+    num_arrays = draw(
+        st.shared(helpers.ints(min_value=2, max_value=10), key="num_arrays")
+    )
+    num_dims = draw(st.shared(helpers.ints(min_value=2, max_value=4), key="num_dims"))
+    input_dtypes = draw(
+        helpers.array_dtypes(
+            available_dtypes=draw(helpers.get_dtypes("valid", full=False))
+        )
+    )
+    dtype = draw(st.sampled_from(input_dtypes))
+    xs = []  # list of what we are going to generate
+    for _ in range(num_arrays):
+        array_shape = draw(
+            helpers.list_of_size(x=st.integers(min_value=2, max_value=5), size=num_dims)
+        )
+        x = draw(helpers.array_values(shape=array_shape, dtype=dtype))
+        xs.append(x)
+    input_dtypes = [dtype] * len(xs)
+    return xs, input_dtypes
+
+
+# broadcast_to
 @st.composite
 def _broadcast_to_helper(draw):
     dtype_and_x = draw(
@@ -266,6 +291,21 @@ def test_paddle_abs(
         fn_tree=fn_tree,
         on_device=on_device,
         x=x[0],
+    )
+
+
+# broadcast_tensors
+@handle_frontend_test(
+    fn_tree="paddle.broadcast_tensors",
+    inputs=_broadcast_tensors_helper(),
+)
+def test_paddle_broadcast_tensors(*, inputs, on_device, fn_tree, frontend, backend_fw):
+    helpers.test_frontend_function(
+        frontend=frontend,
+        backend_to_test=backend_fw,
+        fn_tree=fn_tree,
+        on_device=on_device,
+        input=inputs,
     )
 
 

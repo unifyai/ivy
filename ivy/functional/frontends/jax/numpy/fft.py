@@ -57,6 +57,13 @@ def fftshift(x, axes=None, name=None):
 
 
 @to_ivy_arrays_and_back
+def hfft(a, n=None, axis=-1, norm="backward"):
+    """Compute the FFT of a signal that has Hermitian symmetry, resulting in a real
+    spectrum."""
+    return ivy.hfft(a, axis, norm=norm, n=n)
+
+
+@to_ivy_arrays_and_back
 def ifft(a, n=None, axis=-1, norm=None):
     if norm is None:
         norm = "backward"

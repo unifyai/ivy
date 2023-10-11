@@ -793,7 +793,15 @@ try:
 except:  # noqa: E722
     pass
 try:
-    from .compiler.compiler import transpile, trace_graph, unify
+    from .compiler.compiler import (
+        transpile,
+        trace_graph,
+        unify,
+        native_compile,
+        compile,
+        autotune,
+        compress,
+    )
 except:  # noqa: E722
     pass  # Added for the finally statement
 finally:

@@ -14,6 +14,8 @@ from torch.profiler import profile
 import ivy
 from ivy.functional.ivy.device import (
     _shift_native_arrays_on_default_device,
+    _as_ivy_dev_helper,
+    _as_native_dev_helper,
     Profiler as BaseProfiler,
 )
 
@@ -33,7 +35,7 @@ def dev(
         elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
             return torch.device(dv.replace("gpu", "mps"))
         return torch.device(dv.replace("gpu", "cuda"))
-    return as_ivy_dev(dv)
+    return ivy.as_ivy_dev(dv)
 
 
 def to_device(
@@ -46,42 +48,34 @@ def to_device(
 ) -> torch.Tensor:
     if device is None:
         return x
-    ret = x.to(as_native_dev(device))
+    ret = x.to(ivy.as_native_dev(device))
     if isinstance(x, torch.nn.Parameter):
         return torch.nn.Parameter(ret)
     return ret
 
 
-def as_ivy_dev(device: torch.device, /):
-    if isinstance(device, str):
-        return ivy.Device(device)
-    dev_type, dev_idx = (device.type, device.index)
-    if dev_type == "cpu":
-        return ivy.Device(dev_type)
-    elif dev_type == "mps":
-        return ivy.Device(
-            dev_type.replace("mps", "gpu")
-            + (":" + (str(dev_idx) if dev_idx is not None else "0"))
-        )
-    return ivy.Device(
-        dev_type.replace("cuda", "gpu")
-        + (":" + (str(dev_idx) if dev_idx is not None else "0"))
-    )
+def get_native_device_platform_and_id(device, /):
+    return (device.type.replace("mps", "gpu").replace("cuda", "gpu"), device.index)
 
 
-def as_native_dev(
-    device: Optional[Union[ivy.Device, torch.device]] = None,
-    /,
-) -> Optional[torch.device]:
-    if not isinstance(device, str):
-        return device
-    if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
-        return torch.device(ivy.Device(device).replace("gpu", "mps"))
-    return torch.device(ivy.Device(device).replace("gpu", "cuda"))
+def get_native_device(device_platform, device_id, /):
+    if torch.backends.mps.is_available():
+        device_platform = device_platform.replace("gpu", "mps")
+    else:
+        device_platform = device_platform.replace("gpu", "cuda")
+    return torch.device(device_platform + ":" + str(device_id))
+
+
+def as_ivy_dev(device, /):
+    return _as_ivy_dev_helper(device)
+
+
+def as_native_dev(device, /):
+    return _as_native_dev_helper(device)
 
 
 def clear_cached_mem_on_dev(device: Union[ivy.Device, torch.device], /) -> None:
-    torch_dev = as_native_dev(device)
+    torch_dev = ivy.as_native_dev(device)
     if torch_dev.type == "cuda":
         torch.cuda.empty_cache()
     elif torch_dev.type == "mps":

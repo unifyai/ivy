@@ -12,6 +12,8 @@ import ivy
 from ivy.functional.backends.jax import JaxArray
 from ivy.functional.ivy.device import (
     _shift_native_arrays_on_default_device,
+    _as_ivy_dev_helper,
+    _as_native_dev_helper,
     Profiler as BaseProfiler,
 )
 
@@ -49,7 +51,7 @@ def dev(
         dv = jax.devices()[0]
     if as_native:
         return dv
-    return as_ivy_dev(dv)
+    return ivy.as_ivy_dev(dv)
 
 
 def to_device(
@@ -61,9 +63,9 @@ def to_device(
     out: Optional[JaxArray] = None,
 ):
     if device is not None:
-        cur_dev = as_native_dev(dev(x))
+        cur_dev = ivy.as_native_dev(dev(x))
         if cur_dev != device:
-            x = jax.device_put(x, as_native_dev(device))
+            x = jax.device_put(x, ivy.as_native_dev(device))
     return x
 
 
@@ -71,33 +73,26 @@ def to_device(
 # since if we use to_device, it will return ivy.array which is not desirable
 def _to_device(x, device=None):
     if device is not None:
-        cur_dev = as_native_dev(dev(x))
+        cur_dev = ivy.as_native_dev(dev(x))
         if cur_dev != device:
-            x = jax.device_put(x, as_native_dev(device))
+            x = jax.device_put(x, ivy.as_native_dev(device))
     return x
 
 
+def get_native_device_platform_and_id(device, /):
+    return (device.platform, device.id)
+
+
+def get_native_device(device_platform, device_id, /):
+    return jax.devices(device_platform)[device_id]
+
+
 def as_ivy_dev(device, /):
-    if isinstance(device, str):
-        return ivy.Device(device)
-    if device is None:
-        return None
-    p, dev_id = (device.platform, device.id)
-    if p == "cpu":
-        return ivy.Device(p)
-    return ivy.Device(p + ":" + str(dev_id))
+    return _as_ivy_dev_helper(device)
 
 
 def as_native_dev(device, /):
-    if not isinstance(device, str):
-        return device
-    dev_split = ivy.Device(device).split(":")
-    device = dev_split[0]
-    if len(dev_split) > 1:
-        idx = int(dev_split[1])
-    else:
-        idx = 0
-    return jax.devices(device)[idx]
+    return _as_native_dev_helper(device)
 
 
 def handle_soft_device_variable(*args, fn, **kwargs):
@@ -126,7 +121,7 @@ def gpu_is_available() -> bool:
 
 def num_gpus() -> int:
     try:
-        return len(jax.devices("gpu"))
+        return jax.device_count("gpu")
     except RuntimeError:
         return 0
 

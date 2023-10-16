@@ -379,19 +379,61 @@ def dev(
 # Conversions
 
 
+def _get_str_device_platform_and_id(device, /):
+    device = ivy.Device(device)
+    device_platform, device_id = (device[0:3], 0)
+    if device_platform != "cpu":
+        device_id = int(device[4:])
+
+    return device_platform, device_id
+
+
+def _is_valid_device(device_platform, device_id, /):
+    return device_platform in ["gpu"] and device_id in range(
+        0, ivy.current_backend().num_gpus()
+    )
+
+
+def _as_ivy_dev_helper(device, /):
+    if isinstance(device, str) and "/" not in device:
+        device_platform, device_id = _get_str_device_platform_and_id(device)
+    elif isinstance(device, ivy.NativeDevice):
+        (
+            device_platform,
+            device_id,
+        ) = ivy.current_backend().get_native_device_platform_and_id(device)
+    else:
+        raise ivy.exceptions.IvyDeviceError(
+            f"{device} is not supported or the format is wrong!"
+        )
+    if device_platform not in ["cpu", "gpu"]:
+        raise ivy.exceptions.IvyDeviceError(f"{device_platform} is not supported!")
+    if device_platform == "gpu" and not gpu_is_available():
+        raise ivy.exceptions.IvyDeviceError(
+            "'gpu' requested, but no platforms that are instances of gpu are present!"
+        )
+    if device_platform in [None, "cpu"]:
+        return ivy.Device("cpu")
+    elif _is_valid_device(device_platform, device_id):
+        return ivy.Device(f"{device_platform}:{device_id}")
+    else:
+        return ivy.Device(f"{device_platform}:{0}")
+
+
 @handle_exceptions
-def as_ivy_dev(device: Union[ivy.Device, str], /) -> ivy.Device:
+def as_ivy_dev(device: Union[ivy.NativeDevice, str], /) -> ivy.Device:
     """Convert device to string representation.
 
     Parameters
     ----------
     device
-        The device handle to convert to string.
+        The device handle to convert to string. It'll either be the native
+        device or str based on ivy device format e.g gpu:0
 
     Returns
     -------
     ret
-        Device string e.g. 'cuda:0'.
+        Device string e.g. 'gpu:0'.
 
     Examples
     --------
@@ -400,6 +442,31 @@ def as_ivy_dev(device: Union[ivy.Device, str], /) -> ivy.Device:
     cpu
     """
     return ivy.current_backend().as_ivy_dev(device)
+
+
+def _as_native_dev_helper(device, /):
+    if isinstance(device, str) and "/" not in device:
+        device_platform, device_id = _get_str_device_platform_and_id(device)
+    elif isinstance(device, ivy.NativeDevice):
+        (
+            device_platform,
+            device_id,
+        ) = ivy.current_backend().get_native_device_platform_and_id(device)
+    else:
+        raise ivy.exceptions.IvyDeviceError(
+            f"{device} is not supported or the format is wrong!"
+        )
+    if device_platform not in ["cpu", "gpu"]:
+        raise ivy.exceptions.IvyDeviceError(f"{device_platform} is not supported!")
+    if device_platform == "gpu" and not gpu_is_available():
+        raise ivy.exceptions.IvyDeviceError(
+            "'gpu' requested, but no platforms that are instances of gpu are present!"
+        )
+    if device_platform in [None, "cpu"]:
+        device_platform, device_id = "cpu", 0
+    elif not _is_valid_device(device_platform, device_id):
+        device_id = 0
+    return ivy.current_backend().get_native_device(device_platform, device_id)
 
 
 @handle_exceptions
@@ -412,6 +479,7 @@ def as_native_dev(device: Union[ivy.Device, ivy.NativeDevice], /) -> ivy.NativeD
         The device string to convert to native device handle.
         A native device handle can be passed in instead - in this case
         the unmodified parameter is returned.
+        Ivy string representation of device can also be passed
 
     Returns
     -------

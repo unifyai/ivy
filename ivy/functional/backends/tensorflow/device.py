@@ -11,7 +11,11 @@ from typing import Union, Optional
 
 # local
 import ivy
-from ivy.functional.ivy.device import Profiler as BaseProfiler
+from ivy.functional.ivy.device import (
+    _as_ivy_dev_helper,
+    _as_native_dev_helper,
+    Profiler as BaseProfiler,
+)
 
 
 def _same_device(dev_a, dev_b):
@@ -31,7 +35,7 @@ def dev(
     dv = x.device
     if as_native:
         return dv
-    return as_ivy_dev(dv)
+    return ivy.as_ivy_dev(dv)
 
 
 def to_device(
@@ -44,7 +48,7 @@ def to_device(
 ) -> Union[tf.Tensor, tf.Variable]:
     if device is None:
         return x
-    device = as_native_dev(device)
+    device = ivy.as_native_dev(device)
     current_dev = dev(x)
     if not _same_device(current_dev, device):
         with tf.device("/" + device.upper()):
@@ -52,26 +56,22 @@ def to_device(
     return x
 
 
-def as_ivy_dev(device: str, /):
-    if isinstance(device, str) and "/" not in device:
-        return ivy.Device(device)
+def get_native_device_platform_and_id(device, /):
     dev_in_split = device[1:].split(":")[-2:]
-    if len(dev_in_split) == 1:
-        return ivy.Device(dev_in_split[0])
-    dev_type, dev_idx = dev_in_split
-    dev_type = dev_type.lower()
-    if dev_type == "cpu":
-        return ivy.Device(dev_type)
-    return ivy.Device(":".join([dev_type, dev_idx]))
+    device_platform, device_id = dev_in_split[0].lower(), int(dev_in_split[1])
+    return (device_platform, device_id)
 
 
-def as_native_dev(device: str, /):
-    if isinstance(device, str) and "/" in device:
-        return device
-    ret = "/" + ivy.Device(device).upper()
-    if not ret[-1].isnumeric():
-        ret += ":0"
-    return ret
+def get_native_device(device_platform, device_id, /):
+    return f"/{device_platform.upper()}:{device_id}"
+
+
+def as_ivy_dev(device, /):
+    return _as_ivy_dev_helper(device)
+
+
+def as_native_dev(device, /):
+    return _as_native_dev_helper(device)
 
 
 def clear_cached_mem_on_dev(device: str, /):

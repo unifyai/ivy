@@ -6,7 +6,11 @@ signature.
 import mxnet as mx
 from typing import Union, Optional
 import ivy
-from ivy.functional.ivy.device import Profiler as BaseProfiler
+from ivy.functional.ivy.device import (
+    _as_ivy_dev_helper,
+    _as_native_dev_helper,
+    Profiler as BaseProfiler,
+)
 from ivy.utils.exceptions import IvyNotImplementedException
 
 
@@ -15,7 +19,7 @@ def dev(
 ) -> Union[(ivy.Device, str)]:
     if as_native:
         return x.context
-    return as_ivy_dev(x.context)
+    return ivy.as_ivy_dev(x.context)
 
 
 def to_device(
@@ -26,35 +30,23 @@ def to_device(
     stream: Optional[int] = None,
     out: Optional[Union[(None, mx.ndarray.NDArray)]] = None,
 ) -> Union[(None, mx.ndarray.NDArray)]:
-    return x.as_in_context(as_native_dev(device))
+    return x.as_in_context(ivy.as_native_dev(device))
 
 
-def as_ivy_dev(device):
-    if isinstance(device, str):
-        return ivy.Device(device)
-    if device is None:
-        return None
-    # if mx device context is passed
-    p, dev_id = (device.device_type, device.device_id)
-    if p == "cpu":
-        return ivy.Device(p)
-    return ivy.Device(p + ":" + str(dev_id))
+def get_native_device_platform_and_id(device, /):
+    return (device.device_type, device.device_id)
 
 
-def as_native_dev(device: str, /):
-    if isinstance(device, mx.Context):
-        return device
-    if device is None or "cpu" in device:
-        mx_dev = "cpu"
-    elif "gpu" in device:
-        mx_dev = "gpu"
-    else:
-        raise Exception(f"dev input {device} not supported.")
-    if device.find(":") != -1:
-        mx_dev_id = int(device[device.find(":") + 1 :])
-    else:
-        mx_dev_id = 0
-    return mx.Context(mx_dev, mx_dev_id)
+def get_native_device(device_platform, device_id, /):
+    return mx.Context(device_platform, device_id)
+
+
+def as_ivy_dev(device, /):
+    return _as_ivy_dev_helper(device)
+
+
+def as_native_dev(device, /):
+    return _as_native_dev_helper(device)
 
 
 def clear_cached_mem_on_dev(device: str, /):

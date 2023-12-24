@@ -803,3 +803,14 @@ def erfc(x: paddle.Tensor, /, *, out: Optional[paddle.Tensor] = None) -> paddle.
         result = paddle.squeeze(result, axis=-1)
 
     return result
+
+
+def amin(
+    x1: Union[float, paddle.Tensor],
+    x2: Union[float, paddle.Tensor],
+    /,
+    *,
+    use_where: bool = True,
+    out: Optional[paddle.Tensor] = None,
+) -> paddle.Tensor:
+    return paddle.amin(x1, x2)

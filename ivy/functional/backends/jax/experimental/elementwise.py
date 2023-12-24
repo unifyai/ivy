@@ -499,3 +499,14 @@ def erfc(
     out: Optional[JaxArray] = None,
 ) -> JaxArray:
     return js.special.erfc(x)
+
+
+def amin(
+    x1: Union[float, JaxArray],
+    x2: Union[float, JaxArray],
+    /,
+    *,
+    out: Optional[JaxArray] = None,
+) -> JaxArray:
+    x1, x2 = promote_types_of_inputs(x1, x2)
+    return jnp.amin(x1, x2)

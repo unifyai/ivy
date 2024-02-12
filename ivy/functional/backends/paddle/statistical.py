@@ -104,6 +104,16 @@ def max(
     return ret.astype(ret_dtype)
 
 
+def _calculate_reduced_shape(x, axis, keepdims):
+    if axis is None:
+        axis = tuple(range(len(x.shape)))
+    elif type(axis) not in (tuple, list):
+        axis = (axis,)
+    if keepdims:
+        return [1 if i in axis else x.shape[i] for i in range(len(x.shape))]
+    return [x.shape[i] for i in range(len(x.shape)) if i not in axis]
+
+
 @with_supported_dtypes(
     {"2.6.0 and below": ("bool", "complex", "float32", "float64")}, backend_version
 )
@@ -116,6 +126,9 @@ def mean(
     out: Optional[paddle.Tensor] = None,
 ) -> paddle.Tensor:
     ret_dtype = x.dtype
+    if 0 in x.shape:
+        shape = _calculate_reduced_shape(x, axis, keepdims)
+        ret = paddle.empty(shape)
     if paddle.is_complex(x):
         ret = paddle.complex(
             paddle.mean(x.real(), axis=axis, keepdim=keepdims),

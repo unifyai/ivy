@@ -5,6 +5,14 @@ from ivy.functional.frontends.torch.func_wrapper import to_ivy_arrays_and_back
 
 
 @to_ivy_arrays_and_back
+@with_supported_dtypes(
+    {"2.1.1 and below": ("float32", "float64", "int32", "int64")}, "torch"
+)
+def copy_(input, other):
+    return ivy.assign(input, other)
+
+
+@to_ivy_arrays_and_back
 def is_complex(input):
     return ivy.is_complex_dtype(input)
 

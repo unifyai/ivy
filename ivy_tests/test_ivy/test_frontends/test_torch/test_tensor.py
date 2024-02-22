@@ -347,7 +347,13 @@ def _repeat_helper(draw):
         )
     )
 
-    repeats = draw(st.lists(st.integers(min_value=1, max_value=5), min_size=len(shape)))
+    repeats = draw(
+        st.lists(
+            st.integers(min_value=1, max_value=5),
+            min_size=len(shape),
+            max_size=5,
+        )
+    )
     return input_dtype, x, repeats
 
 

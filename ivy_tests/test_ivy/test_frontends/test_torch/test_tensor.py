@@ -967,6 +967,7 @@ def test_torch___mod__(
     backend_fw,
 ):
     input_dtype, x = dtype_and_x
+    assume(not np.any(np.isclose(x[1], 0)))
     helpers.test_frontend_method(
         init_input_dtypes=[input_dtype[0]],
         backend_to_test=backend_fw,

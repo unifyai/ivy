@@ -991,7 +991,7 @@ def test_torch___mod__(
     init_tree="torch.tensor",
     method_name="__mul__",
     dtype_and_x=helpers.dtype_and_values(
-        available_dtypes=helpers.get_dtypes("float"),
+        available_dtypes=helpers.get_dtypes("numeric"),
         num_arrays=2,
         min_value=-1e04,
         max_value=1e04,
@@ -1009,12 +1009,12 @@ def test_torch___mul__(
 ):
     input_dtype, x = dtype_and_x
     helpers.test_frontend_method(
-        init_input_dtypes=input_dtype,
+        init_input_dtypes=[input_dtype[0]],
         backend_to_test=backend_fw,
         init_all_as_kwargs_np={
             "data": x[0],
         },
-        method_input_dtypes=input_dtype,
+        method_input_dtypes=[input_dtype[1]],
         method_all_as_kwargs_np={
             "other": x[1],
         },

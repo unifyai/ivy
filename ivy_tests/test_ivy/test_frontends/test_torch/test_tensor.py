@@ -992,7 +992,7 @@ def test_torch___mod__(
     init_tree="torch.tensor",
     method_name="__mul__",
     dtype_and_x=helpers.dtype_and_values(
-        available_dtypes=helpers.get_dtypes("numeric"),
+        available_dtypes=helpers.get_dtypes("valid"),
         num_arrays=2,
         min_value=-1e04,
         max_value=1e04,

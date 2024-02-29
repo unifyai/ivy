@@ -1171,12 +1171,12 @@ def test_torch___pow__(
     if "int" in dtype:
         x[1] = ivy.abs(x[1])
     helpers.test_frontend_method(
-        init_input_dtypes=input_dtype,
+        init_input_dtypes=[input_dtype[0]],
         backend_to_test=backend_fw,
         init_all_as_kwargs_np={
             "data": x[0],
         },
-        method_input_dtypes=input_dtype,
+        method_input_dtypes=[input_dtype[1]],
         method_all_as_kwargs_np={
             "exponent": x[1],
         },

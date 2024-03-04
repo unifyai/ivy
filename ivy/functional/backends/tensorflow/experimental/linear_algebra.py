@@ -279,3 +279,62 @@ def dot(
 ) -> tf.Tensor:
     a, b = ivy.promote_types_of_inputs(a, b)
     return tf.experimental.numpy.dot(a, b)
+
+
+def lstsq(
+    a: tf.Tensor,
+    b: tf.Tensor,
+    /,
+    *,
+    rcond: Optional[float] = None,
+    out: Optional[tf.Tensor] = None,
+) -> Tuple[tf.Tensor]:
+    s, u, v = tf.linalg.svd(a, full_matrices=False, compute_uv=True)
+
+    ranks = tf.reduce_sum(
+        tf.cast(s > rcond * tf.math.reduce_max(s), dtype=tf.int64), axis=(-1)
+    )
+
+    m, n = a.shape[-2], a.shape[-1]
+    k = b.shape[-1]
+
+    b_reshaped = b.reshape(-1, m, k)
+
+    u_reshaped = tf.reshape(u, (-1, tf.shape(u)[-2], tf.shape(u)[-1]))
+    v_reshaped = tf.reshape(v, (-1, tf.shape(v)[-2], tf.shape(v)[-1]))
+    s_reshaped = tf.reshape(s, (-1, tf.shape(s)[-1]))
+
+    ranks_reshaped = tf.reshape(ranks, -1)
+
+    X_arr = []
+
+    for i, (b_i, u_i, s_i, v_i, r_i) in enumerate(
+        zip(b_reshaped, u_reshaped, s_reshaped, v_reshaped, ranks_reshaped)
+    ):
+        d = tf.matmul(tf.transpose(u_i[:r_i, :]), b_i) / s_i[:r_i]
+        x = tf.matmul(v_i[:, :r_i], d)
+        X_arr.append(x)
+
+    X = tf.stack(X_arr)
+
+    X_shape1 = tf.shape(a)[:-2]
+    X_shape2 = tf.shape(X)[-2:]
+
+    X_shape = tf.concat([X_shape1, X_shape2], 0)
+
+    X = tf.reshape(X, X_shape)
+
+    ret_residuals = (m > n) and tf.reduce_all(tf.equal(ranks, n))
+
+    if ret_residuals:
+        residuals = tf.reduce_sum(tf.square(b - tf.linalg.matmul(a, X)), axis=[-2])
+    else:
+        residuals = tf.constant(
+            [],
+            dtype=tf.float64,
+            shape=[
+                0,
+            ],
+        )
+
+    return X, residuals, ranks, s

@@ -347,7 +347,13 @@ def _repeat_helper(draw):
         )
     )
 
-    repeats = draw(st.lists(st.integers(min_value=1, max_value=5), min_size=len(shape)))
+    repeats = draw(
+        st.lists(
+            st.integers(min_value=1, max_value=5),
+            min_size=len(shape),
+            max_size=5,
+        )
+    )
     return input_dtype, x, repeats
 
 
@@ -11325,11 +11331,11 @@ def test_torch_remainder_(
     init_tree="torch.tensor",
     method_name="repeat",
     dtype_x_repeats=_repeat_helper(),
-    unpack_repeat=st.booleans(),
+    unpack_repeats=st.booleans(),
 )
 def test_torch_repeat(
     dtype_x_repeats,
-    unpack_repeat,
+    unpack_repeats,
     frontend_method_data,
     init_flags,
     method_flags,
@@ -11338,19 +11344,11 @@ def test_torch_repeat(
     backend_fw,
 ):
     input_dtype, x, repeats = dtype_x_repeats
-
-    if backend_fw == "paddle":
-        # paddle only supports size of the shape of repeats
-        # to be less than or equal to 6
-        assume(len(repeats) <= 6)
-
-    repeat = {
-        "repeats": repeats,
-    }
-    if unpack_repeat:
-        method_flags.num_positional_args = len(repeat["repeats"]) + 1
-        for i, x_ in enumerate(repeat["repeats"]):
-            repeat[f"x{i}"] = x_
+    if unpack_repeats:
+        method_flags.num_positional_args = len(repeats)
+        method_kwargs = {f"x{i}": x_ for i, x_ in enumerate(repeats)}
+    else:
+        method_kwargs = {"repeats": repeats}
     helpers.test_frontend_method(
         init_input_dtypes=input_dtype,
         backend_to_test=backend_fw,
@@ -11358,7 +11356,7 @@ def test_torch_repeat(
             "data": x[0],
         },
         method_input_dtypes=input_dtype,
-        method_all_as_kwargs_np=repeat,
+        method_all_as_kwargs_np=method_kwargs,
         frontend_method_data=frontend_method_data,
         init_flags=init_flags,
         method_flags=method_flags,

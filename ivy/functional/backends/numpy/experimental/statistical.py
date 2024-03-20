@@ -360,7 +360,98 @@ def quantile(
         interpolation=interpolation,
         out=out,
     )
+def _nanquantile(a, q, axis=None):
+    if isinstance(q, float):
+        q = np.asarray(q)
+    ret_dtype = a.dtype
+    if q.ndim > 1:
+        raise ValueError("q argument must be a scalar or 1-dimensional!")
+    if axis is None:
+        axis = 0
+        a = a.flatten()
+    elif axis != 0:
+        a = np.moveaxis(a, axis, 0)
+        axis = 0
 
+    # Remove NaN values from the array
+    a = a[~np.isnan(a)]
+
+    n = a.shape[axis]
+    indices = q * (n - 1)
+
+    a.sort(axis)
+
+    indices_below = np.floor(indices).astype(np.int32)
+    indices_upper = np.ceil(indices).astype(np.int32)
+
+    weights = indices - indices_below.astype("float64")
+
+    indices_below = np.clip(indices_below, 0, n - 1)
+    indices_upper = np.clip(indices_upper, 0, n - 1)
+    tensor_upper = np.take(a, indices_upper, axis=axis)
+    tensor_below = np.take(a, indices_below, axis=axis)
+
+    pred = weights <= 0.5
+    out = np.where(pred, tensor_below, tensor_upper)
+
+    return out.astype(ret_dtype)
+
+
+def _compute_nanquantile_wrapper(
+    x, q, axis=None, keepdims=False, interpolation="linear", out=None
+):
+    # Validate the quantiles to be in the range [0, 1]
+    if not _validate_quantile(q):
+        raise ValueError("Quantiles must be in the range [0, 1]")
+
+    # Check if the interpolation method is valid
+    if interpolation in [
+        "linear",
+        "lower",
+        "higher",
+        "midpoint",
+        "nearest",
+        "nearest_jax",
+    ]:
+
+        if interpolation == "nearest_jax":
+            return _handle_axis(x, q, _nanquantile, keepdims=keepdims, axis=axis)
+        else:
+            # Convert axis to a tuple if it's a list
+            axis = tuple(axis) if isinstance(axis, list) else axis
+        
+
+        # Calculate the nanquantile using numpy's nanquantile function
+        return np.nanquantile(
+            x, q, axis=axis, method=interpolation, keepdims=keepdims, out=out
+        ).astype(x.dtype)
+    else:
+        # Raise an error if the interpolation method is not recognized
+        raise ValueError(
+            "Interpolation must be 'linear', 'lower', 'higher', 'midpoint' or 'nearest'"
+        )
+
+def nanquantile(
+    a: np.ndarray,
+    q: Union[float, np.ndarray],
+    /,
+    *,
+    axis: Optional[Union[int, Sequence[int]]] = None,
+    keepdims: bool = False,
+    interpolation: str = "linear",
+    out: Optional[np.ndarray] = None,
+) -> np.ndarray:
+    # nanquantile method in numpy backend, similar to quantile but ignores NaN values.
+    # The output is always an array with dtype=float64.
+    # This function is useful when the data has missing values.
+    return _compute_nanquantile_wrapper(
+        a,
+        q,
+        axis=axis,
+        keepdims=keepdims,
+        interpolation=interpolation,
+        out=out,
+    )
 
 def corrcoef(
     x: np.ndarray,

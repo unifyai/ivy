@@ -360,6 +360,8 @@ def quantile(
         interpolation=interpolation,
         out=out,
     )
+
+
 def _nanquantile(a, q, axis=None):
     if isinstance(q, float):
         q = np.asarray(q)
@@ -419,7 +421,6 @@ def _compute_nanquantile_wrapper(
         else:
             # Convert axis to a tuple if it's a list
             axis = tuple(axis) if isinstance(axis, list) else axis
-        
 
         # Calculate the nanquantile using numpy's nanquantile function
         return np.nanquantile(
@@ -430,6 +431,7 @@ def _compute_nanquantile_wrapper(
         raise ValueError(
             "Interpolation must be 'linear', 'lower', 'higher', 'midpoint' or 'nearest'"
         )
+
 
 def nanquantile(
     a: np.ndarray,
@@ -452,6 +454,7 @@ def nanquantile(
         interpolation=interpolation,
         out=out,
     )
+
 
 def corrcoef(
     x: np.ndarray,

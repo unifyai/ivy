@@ -30,6 +30,14 @@ def is_tensor(obj):
 
 
 @to_ivy_arrays_and_back
+@with_supported_dtypes(
+    {"2.1.1 and below": ("float32", "float64", "int32", "int64")}, "torch"
+)
+def masked_scatter(input, mask, src):
+    return input.masked_scatter(mask, src)
+
+
+@to_ivy_arrays_and_back
 def numel(input):
     return ivy.astype(ivy.array(input.size), ivy.int64)
 

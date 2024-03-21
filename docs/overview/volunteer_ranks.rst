@@ -72,9 +72,6 @@ Contributors
    * - Ayush Lokare
      - `ayush111111 <https://github.com/ayush111111>`_
      - Merging Master, Ivy Inspector
-   * - Chaitanya Lakhchaura
-     - `ZenithFlux <https://github.com/ZenithFlux>`_
-     - Debugging Dynamo, Merging Master
    * - David Adlai Nettey
      - `Adlai-1 <https://github.com/Adlai-1>`_
      - Merging Master, Ivy Inspector
@@ -107,6 +104,9 @@ Contributors
      - Merging Master, Ivy Inspector
    * - Aryan Pandey
      - `Aryan8912 <https://github.com/Aryan8912>`_
+     - Merging Master
+   * - Chaitanya Lakhchaura
+     - `ZenithFlux <https://github.com/ZenithFlux>`_
      - Merging Master
    * - Dhruv Sharma
      - `druvdub <https://github.com/druvdub>`_

@@ -49,9 +49,9 @@ def cross_entropy(
     Parameters
     ----------
     true
-        input array containing true labels.
+        iivyut array containing true labels.
     pred
-        input array containing the predicted labels.
+        iivyut array containing the predicted labels.
     axis
         the axis along which to compute the cross-entropy. If axis is ``-1``,
         the cross-entropy will be computed along the last dimension. Default: ``-1``.
@@ -60,7 +60,7 @@ def cross_entropy(
         the loss. If epsilon is ``0``, no smoothing will be applied. Default: ``1e-7``.
     out
         optional output array, for writing the result to. It must have a shape
-        that the inputs broadcast to.
+        that the iivyuts broadcast to.
 
     Returns
     -------
@@ -106,9 +106,9 @@ def binary_cross_entropy(
     Parameters
     ----------
     true
-        input array containing true labels.
+        iivyut array containing true labels.
     pred
-        input array containing Predicted labels.
+        iivyut array containing Predicted labels.
     from_logits
         Whether `pred` is expected to be a logits tensor. By
         default, we assume that `pred` encodes a probability distribution.
@@ -126,7 +126,7 @@ def binary_cross_entropy(
         Axis along which to compute crossentropy.
     out
         optional output array, for writing the result to. It must have a shape
-        that the inputs broadcast to.
+        that the iivyuts broadcast to.
 
     Returns
     -------
@@ -136,7 +136,7 @@ def binary_cross_entropy(
 
     Examples
     --------
-    With :class:`ivy.Array` input:
+    With :class:`ivy.Array` iivyut:
 
     >>> x = ivy.array([0, 1, 0, 0])
     >>> y = ivy.array([0.2, 0.8, 0.3, 0.8])
@@ -175,7 +175,7 @@ def binary_cross_entropy(
     >>> print(z)
     ivy.array(1.02136981)
 
-    With :class:`ivy.NativeArray` input:
+    With :class:`ivy.NativeArray` iivyut:
 
     >>> x = ivy.native_array([0, 1, 0, 1])
     >>> y = ivy.native_array([0.2, 0.7, 0.2, 0.6])
@@ -183,7 +183,7 @@ def binary_cross_entropy(
     >>> print(z)
     ivy.array(0.32844672)
 
-    With a mix of :class:`ivy.Array` and :class:`ivy.NativeArray` inputs:
+    With a mix of :class:`ivy.Array` and :class:`ivy.NativeArray` iivyuts:
 
     >>> x = ivy.array([0, 0, 1, 1])
     >>> y = ivy.native_array([0.1, 0.2, 0.8, 0.6])
@@ -191,7 +191,7 @@ def binary_cross_entropy(
     >>> print(z)
     ivy.array(0.26561815)
 
-    With :class:`ivy.Container` input:
+    With :class:`ivy.Container` iivyut:
 
     >>> x = ivy.Container(a=ivy.array([1, 0, 0]),b=ivy.array([0, 0, 1]))
     >>> y = ivy.Container(a=ivy.array([0.6, 0.2, 0.3]),b=ivy.array([0.8, 0.2, 0.2]))
@@ -202,7 +202,7 @@ def binary_cross_entropy(
         b: ivy.array(1.14733934)
     }
 
-    With a mix of :class:`ivy.Array` and :class:`ivy.Container` inputs:
+    With a mix of :class:`ivy.Array` and :class:`ivy.Container` iivyuts:
 
     >>> x = ivy.array([1 , 1, 0])
     >>> y = ivy.Container(a=ivy.array([0.7, 0.8, 0.2]))
@@ -289,9 +289,9 @@ def sparse_cross_entropy(
     Parameters
     ----------
     true
-     input array containing the true labels as logits.
+     iivyut array containing the true labels as logits.
     pred
-     input array containing the predicted labels as logits.
+     iivyut array containing the predicted labels as logits.
     axis
      the axis along which to compute the cross-entropy. If axis is ``-1``, the
      cross-entropy will be computed along the last dimension. Default: ``-1``.
@@ -300,7 +300,7 @@ def sparse_cross_entropy(
      loss. If epsilon is ``0``, no smoothing will be applied. Default: ``1e-7``.
     out
      optional output array, for writing the result to. It must have a shape
-     that the inputs broadcast to.
+     that the iivyuts broadcast to.
 
     Returns
     -------
@@ -309,7 +309,7 @@ def sparse_cross_entropy(
 
     Examples
     --------
-    With :class:`ivy.Array` input:
+    With :class:`ivy.Array` iivyut:
 
     >> x = ivy.array([2])
     >> y = ivy.array([0.1, 0.1, 0.7, 0.1])
@@ -326,14 +326,14 @@ def sparse_cross_entropy(
     >>> print(ivy.cross_entropy(x, y))
     ivy.array(5.75646281)
 
-    With :class:`ivy.NativeArray` input:
+    With :class:`ivy.NativeArray` iivyut:
 
     >>> x = ivy.native_array([4])
     >>> y = ivy.native_array([0.1, 0.2, 0.1, 0.1, 0.5])
     >>> print(ivy.sparse_cross_entropy(x, y))
     ivy.array([0.13862944])
 
-    With :class:`ivy.Container` input:
+    With :class:`ivy.Container` iivyut:
 
     >>> x = ivy.Container(a=ivy.array([4]))
     >>> y = ivy.Container(a=ivy.array([0.1, 0.2, 0.1, 0.1, 0.5]))
@@ -342,14 +342,14 @@ def sparse_cross_entropy(
         a: ivy.array([0.13862944])
     }
 
-    With a mix of :class:`ivy.Array` and :class:`ivy.NativeArray` inputs:
+    With a mix of :class:`ivy.Array` and :class:`ivy.NativeArray` iivyuts:
 
     >>> x = ivy.array([0])
     >>> y = ivy.native_array([0.1, 0.2, 0.6, 0.1])
     >>> print(ivy.sparse_cross_entropy(x,y))
     ivy.array([0.57564628])
 
-    With a mix of :class:`ivy.Array` and :class:`ivy.Container` inputs:
+    With a mix of :class:`ivy.Array` and :class:`ivy.Container` iivyuts:
 
     >>> x = ivy.array([0])
     >>> y = ivy.Container(a=ivy.array([0.1, 0.2, 0.6, 0.1]))
@@ -360,14 +360,14 @@ def sparse_cross_entropy(
 
     Instance Method Examples
     ~~~~~~~~~~~~~~~~~~~~~~~~
-    With :class:`ivy.Array` input:
+    With :class:`ivy.Array` iivyut:
 
     >>> x = ivy.array([2])
     >>> y = ivy.array([0.1, 0.1, 0.7, 0.1])
     >>> print(x.sparse_cross_entropy(y))
     ivy.array([0.08916873])
 
-    With :class:`ivy.Container` input:
+    With :class:`ivy.Container` iivyut:
 
     >>> x = ivy.Container(a=ivy.array([2]))
     >>> y = ivy.Container(a=ivy.array([0.1, 0.1, 0.7, 0.1]))
@@ -381,3 +381,37 @@ def sparse_cross_entropy(
     return ivy.cross_entropy(
         true, pred, axis=axis, epsilon=epsilon, reduction=reduction, out=out
     )
+
+
+def nll_loss(true, pred, epsilon=1e-7):
+    """Calculate the Negative Log Likelihood (NLL) loss.
+
+    Parameters
+    ----------
+    pred : ivy.ndarray
+        A 2D ivy array (or similar) containing predicted probabilities.
+        Each row should correspond to a data point, and each column should
+        correspond to a class.
+    true : ivy.ndarray
+        A 1D ivy array (or similar) containing the true class labels for each
+        data point. The length of this array should be equal to the number of
+        rows in 'predictions'.
+    epsilon : float, optional
+        A small value added to the predictions to prevent taking the logarithm
+        of zero. Default is 1e-7.
+
+    Returns
+    -------
+    loss : float
+        The NLL loss value as a scalar.
+    """
+    # Ensure predictions are not zero to avoid log(0) issues
+    predictions = ivy.clip(pred, epsilon, 1 - epsilon)
+
+    # Calculate NLL loss
+    nll = -ivy.log(predictions[ivy.arange(len(predictions)), true])
+
+    # Compute the average loss over all data points
+    loss = ivy.mean(nll)
+
+    return loss

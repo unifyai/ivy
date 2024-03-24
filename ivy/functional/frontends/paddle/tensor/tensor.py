@@ -1261,3 +1261,19 @@ class Tensor:
     )
     def chunk(self, chunks, axis=0, name=None):
         return paddle_frontend.split(self._ivy_array, num_or_sections=chunks, axis=axis)
+
+    @with_supported_dtypes(
+        {
+            "2.5.1 and below": (
+                "bool",
+                "float32",
+                "float64",
+                "int32",
+                "int64",
+                "complex",
+            )
+        },
+        "paddle",
+    )
+    def moveaxis(self, source, destination, name=None):
+        return ivy.moveaxis(self._ivy_array, source, destination)

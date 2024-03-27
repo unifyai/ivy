@@ -309,6 +309,10 @@ def test_jac(x, dtype, func_str, backend_fw):
     if backend_fw == "numpy":
         pytest.skip()
 
+    test_2nd_order = True
+    if backend_fw == "paddle":
+        test_2nd_order = False
+
     with BackendHandler.update_backend(backend_fw) as ivy_backend:
         f = ivy_backend.__dict__[func_str]
 
@@ -321,6 +325,10 @@ def test_jac(x, dtype, func_str, backend_fw):
         jacobian = fn(var)
         jacobian_np = helpers.flatten_and_to_np(ret=jacobian, backend=backend_fw)
         assert jacobian_np != []
+        if test_2nd_order:
+            fn2 = ivy_backend.jac(fn)
+            jacobian2 = fn2(var)
+            jacobian_np2 = helpers.flatten_and_to_np(ret=jacobian2, backend=backend_fw)
 
     with BackendHandler.update_backend("tensorflow") as gt_backend:
         f = gt_backend.__dict__[func_str]
@@ -338,6 +346,16 @@ def test_jac(x, dtype, func_str, backend_fw):
         for jacobian, jacobian_from_gt in zip(jacobian_np, jacobian_np_from_gt):
             assert jacobian.shape == jacobian_from_gt.shape
             assert np.allclose(jacobian, jacobian_from_gt)
+
+        if test_2nd_order:
+            fn2 = gt_backend.jac(fn)
+            jacobian_gt2 = fn2(var)
+            jacobian_np_from_gt2 = helpers.flatten_and_to_np(
+                ret=jacobian_gt2, backend="tensorflow"
+            )
+            for jacobian, jacobian_from_gt in zip(jacobian_np2, jacobian_np_from_gt2):
+                assert jacobian.shape == jacobian_from_gt.shape
+                assert np.allclose(jacobian, jacobian_from_gt)
 
     # Test nested input
     def func(xs):

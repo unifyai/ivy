@@ -12,6 +12,9 @@ from ivy.functional.frontends.numpy.func_wrapper import (
 )
 
 
+import numpy as np
+
+
 # --- Helpers --- #
 # --------------- #
 
@@ -383,6 +386,25 @@ def _remainder(
     ret = ivy.remainder(x1, x2, out=out)
     if ivy.is_array(where):
         ret = ivy.where(where, ret, ivy.default(out, ivy.zeros_like(ret)), out=out)
+    return ret
+
+
+def _roots(
+    p,
+    /,
+    out=None,
+    *,
+    where=True,
+    casting="same_kind",
+    order="K",
+    dtype=None,
+    subok=True,
+):
+    if dtype:
+        p = np.asarray(p, dtype=dtype)
+    ret = np.roots(p, out=out)
+    if np.asarray(where).ndim == 1:
+        ret = np.where(where, ret, np.full_like(ret, np.nan), out=out)
     return ret
 
 

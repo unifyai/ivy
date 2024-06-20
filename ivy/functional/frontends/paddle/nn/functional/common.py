@@ -6,6 +6,14 @@ from ivy.functional.frontends.paddle.func_wrapper import to_ivy_arrays_and_back
 
 @to_ivy_arrays_and_back
 @with_supported_dtypes({"2.6.0 and below": ("float32", "float64")}, "paddle")
+def bilinear(x1, x2, weight, bias=None, name=None):
+    x2_transposed = ivy.swapaxes(x2, -1, -2)
+    result = ivy.linear(ivy.multiply(x1, x2_transposed), weight, bias=bias)
+    return x1, x2_transposed, weight, bias, result
+
+
+@to_ivy_arrays_and_back
+@with_supported_dtypes({"2.6.0 and below": ("float32", "float64")}, "paddle")
 def cosine_similarity(x1, x2, *, axis=1, eps=1e-08):
     if len(x1.shape) == len(x2.shape) and len(x2.shape) >= 2:
         numerator = ivy.sum(x1 * x2, axis=axis)

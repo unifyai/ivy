@@ -402,6 +402,13 @@ class ndarray:
             out=out,
         )
 
+    def byteswap(self, inplace=False):
+        if inplace:
+            self.ivy_array.byteswap(True)
+            return self
+        else:
+            return self.ivy_array.byteswap()
+
     def tofile(self, fid, /, sep="", format_="%s"):
         if self.ndim == 0:
             string = str(self)

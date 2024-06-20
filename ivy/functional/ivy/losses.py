@@ -381,3 +381,58 @@ def sparse_cross_entropy(
     return ivy.cross_entropy(
         true, pred, axis=axis, epsilon=epsilon, reduction=reduction, out=out
     )
+
+
+@handle_exceptions
+@handle_nestable
+@handle_array_like_without_promotion
+@inputs_to_ivy_arrays
+@handle_array_function
+def ssim_loss(
+    pred: Union[ivy.Array, ivy.NativeArray], ytrue: Union[ivy.Array, ivy.NativeArray]
+) -> ivy.Array:
+    """Calculate the Structural Similarity Index (SSIM) loss between two
+    images.
+
+    Parameters
+    ----------
+        pred: A 3D image tensor of shape (batch_size, channels, height, width).
+        ytrue: A 3D image tensor of shape (batch_size, channels, height, width).
+
+    Returns
+    -------
+        inv.array: The SSIM loss mesure similarity between the two images.
+
+    Examples
+    --------
+    With :class:`ivy.Array` input:
+    >>> import ivy
+    >>> x = ivy.ones((batch_size, channels, height, width))
+    >>> y = ivy.zeros((batch_size, channels, height, width))
+    >>> loss = ivy.ssim_loss(x, y)
+    >>> print(loss)
+    ivy.array(0.99989992)
+    """
+    # Calculate the mean and variance of the two images.
+    mu_x = ivy.avg_pool2d(pred, (3, 3), (3, 3), "SAME")
+    mu_y = ivy.avg_pool2d(ytrue, (3, 3), (3, 3), "SAME")
+
+    sigma_x2 = ivy.avg_pool2d(pred * pred, (3, 3), (3, 3), "SAME") - mu_x * mu_x
+    sigma_y2 = ivy.avg_pool2d(ytrue * ytrue, (3, 3), (3, 3), "SAME") - mu_y * mu_y
+
+    sigma_xy = ivy.avg_pool2d(pred * ytrue, (3, 3), (3, 3), "SAME") - mu_x * mu_y
+
+    # Add small constants to avoid division by zero.
+    C1 = 0.01**2
+    C2 = 0.03**2
+
+    # Calculate the SSIM index.
+    ssim = ((2 * mu_x * mu_y + C1) * (2 * sigma_xy + C2)) / (
+        (mu_x**2 + mu_y**2 + C1) * (sigma_x2 + sigma_y2 + C2)
+    )
+
+    ssim = 1 - ssim
+
+    loss = ivy.mean(ssim)
+
+    return loss

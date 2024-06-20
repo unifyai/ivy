@@ -465,10 +465,19 @@ def interpolate(
     mode: Optional[Literal["linear", "bilinear", "trilinear"]] = "linear",
     scale_factor: Optional[Union[Sequence[int], int]] = None,
     recompute_scale_factor: Optional[bool] = None,
-    align_corners: bool = False,
+    align_corners: Optional[bool] = None,
+    data_format: str = "NCHW",
     antialias: Optional[bool] = False,
     out: Optional[paddle.Tensor] = None,
 ):
+    if recompute_scale_factor is True:
+        align_mode = 1
+    elif recompute_scale_factor is False:
+        align_mode = 0
+    return paddle.nn.functional.interpolate(
+        x, size, scale_factor, mode, align_corners, align_mode, data_format
+    )
+
     if mode not in ["linear", "bilinear", "bicubic", "trilinear"]:
         align_corners = None
     return paddle.nn.functional.interpolate(

@@ -1,6 +1,7 @@
 # global
 from typing import Iterable
 import math
+from ivy.functional.frontends.torch.func_wrapper import to_ivy_arrays_and_back
 
 # local
 import ivy
@@ -2290,6 +2291,10 @@ class Tensor:
 
     def rad2deg(self, *, out=None):
         return torch_frontend.rad2deg(self, out=out)
+
+    @to_ivy_arrays_and_back
+    def fill_diagonal_(self, fill_value, wrap=False):
+        return ivy.fill_diagonal(self, fill_value, wrap=wrap)
 
     @with_supported_dtypes(
         {"2.2 and below": "valid"},

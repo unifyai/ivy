@@ -1,5 +1,5 @@
 <div style="display: block;" align="center">
-    <a href="https://ivy.dev/">
+    <a href="https://ivy-llc.github.io//">
         <img class="dark-light" width="50%" src="https://raw.githubusercontent.com/ivy-llc/assets/refs/heads/main/assets/logos/ivy-long.svg"/>
     </a>
 </div>
@@ -94,7 +94,7 @@ These are the frameworks that `ivy.transpile` currently supports conversions fro
 
 # Using ivy
 
-Here's some examples, to help you get started using Ivy! The [examples page](https://www.docs.ivy.dev/demos/examples_and_demos.html) also features a wide range of
+Here's some examples, to help you get started using Ivy! The [examples page](https://ivy-llc.github.io/docs/demos/examples_and_demos.html) also features a wide range of
 demos and tutorials showcasing some more use cases for Ivy.
 
   <details>
@@ -204,8 +204,8 @@ We believe that everyone can contribute and make a difference. Whether
 it\'s writing code, fixing bugs, or simply sharing feedback,
 your contributions are definitely welcome and appreciated"
 
-Check out all of our [Open Tasks](https://docs.ivy.dev/overview/contributing/open_tasks.html),
-and find out more info in our [Contributing Guide](https://docs.ivy.dev/overview/contributing.html)
+Check out all of our [Open Tasks](https://ivy-llc.github.io/docs/overview/contributing/open_tasks.html),
+and find out more info in our [Contributing Guide](https://ivy-llc.github.io/docs/overview/contributing.html)
 in the docs.
 
 <br clear="all" />

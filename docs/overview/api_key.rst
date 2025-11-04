@@ -1,8 +1,8 @@
 Setting up your API key
 =======================
 
-You can generate a personal api key for Ivy by signing up for free at https://ivy.dev/signin.
-This will grant you additional transpilations that can be used for completely free on any code! Find out more at https://ivy.dev/.
+You can generate a personal api key for Ivy by signing up for free at https://ivy-llc.github.io/signin.
+This will grant you additional transpilations that can be used for completely free on any code! Find out more at https://ivy-llc.github.io/.
 
 Using your API key
 ------------------

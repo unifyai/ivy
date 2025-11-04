@@ -15,8 +15,8 @@ Please, follow the next process when you work on your subtask:
 
    Currently, there are three open tasks:
    - [Transpiler](https://github.com/ivy-llc/ivy/issues?q=is%3Aopen+is%3Aissue+label%3ATranspiler)
-   - [Frontend APIs](https://docs.ivy.dev/overview/contributing/open_tasks.html#frontend-apis)
-   - [Ivy Experimental API](https://docs.ivy.dev/overview/contributing/open_tasks.html#ivy-experimental-api)
+   - [Frontend APIs](https://ivy-llc.github.io/docs/overview/contributing/open_tasks.html#frontend-apis)
+   - [Ivy Experimental API](https://ivy-llc.github.io/docs/overview/contributing/open_tasks.html#ivy-experimental-api)
 
 2. **Create Issue:**
 

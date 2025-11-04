@@ -45,7 +45,7 @@ def format_missing_frontends_msg(frequency):
     msg = (
         "\n\n(MissingFrontendsWarning): Some functions are not yet implemented in the Ivy frontend API."
         + " Visit Ivy's open task page to learn more about contributing: "
-        + "https://www.docs.ivy.dev/overview/contributing/open_tasks.html \n\n"
+        + "https://www.ivy-llc.github.io/docs/overview/contributing/open_tasks.html \n\n"
         + "The missing functions are listed below as <(number of calls) function_path>:\n-> {}\n\n"
         + "Proceeding with transpilation, but be aware that the computation may fail if it reaches a point "
         + "where these missing frontends are required.\n"

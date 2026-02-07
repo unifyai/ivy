@@ -409,7 +409,7 @@ def _apply_fn_to_class(cls, fn, fargs, fkwargs, **kwargs):
             except AttributeError:
                 name = "function"
 
-            # Only the constructor is supposed to recieve the args/kwargs
+            # Only the constructor is supposed to receive the args/kwargs
             # when tracing/transpiling entire classes
             if name != "__init__":
                 return MethodDescriptor(inner_function, name, fn, None, None, **kwargs)

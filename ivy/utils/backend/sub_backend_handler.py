@@ -115,13 +115,13 @@ def fn_name_from_version_specific_fn_name_sub_backend(
         )
     else:
         back_version = tuple(map(int, back_version.split(".")))
-    v_occurences = [m.start() for m in re.finditer("_v_", name)]
-    fn_name_1 = name[: v_occurences[1] + 3]
-    fn_name_2 = name[: v_occurences[0]] + name[v_occurences[1] :]
+    v_occurrences = [m.start() for m in re.finditer("_v_", name)]
+    fn_name_1 = name[: v_occurrences[1] + 3]
+    fn_name_2 = name[: v_occurrences[0]] + name[v_occurrences[1] :]
     ret_1 = fn_name_from_version_specific_fn_name(fn_name_1, sub_backend_version)
     ret_2 = fn_name_from_version_specific_fn_name(fn_name_2, backend_version)
     if ret_1 == ret_2:
-        return name[: v_occurences[0]]
+        return name[: v_occurrences[0]]
 
 
 # dynamic sub_backend detection

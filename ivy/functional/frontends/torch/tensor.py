@@ -992,6 +992,10 @@ class Tensor:
     def neg(self):
         return torch_frontend.negative(self)
 
+    @with_unsupported_dtypes({"2.2 and below": ("bool", "bfloat16")}, "torch")
+    def resolve_neg(self):
+        return torch_frontend.resolve_neg(self)
+
     @with_unsupported_dtypes({"2.2 and below": ("bool",)}, "torch")
     def neg_(self):
         ret = torch_frontend.negative(self)

@@ -43,3 +43,8 @@ venv.bak/
 ivy_dev/
 *venv/
 venv*
+
+# Local docs build (see docs/make_docs.sh)
+.doc-builder/
+docs.old/
+docs/build/

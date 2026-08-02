@@ -9,8 +9,8 @@ Comparing Ivy with ONNX
 .. |onnx| image:: https://raw.githubusercontent.com/unifyai/unifyai.github.io/main/img/externally_linked/related_work/exchange_formats/onnx.png
     :height: 20pt
     :class: dark-light
-.. |ivy| image:: https://raw.githubusercontent.com/ivy-llc/assets/refs/heads/main/assets/logos/ivy-long.png
-    :height: 40pt
+.. |ivy| image:: https://raw.githubusercontent.com/unifyai/ivy/main/assets/brand/ivy-mark.png
+    :height: 20pt
     :class: dark-light
 
 ONNX |onnx|
@@ -28,7 +28,7 @@ for exporting to the format. This enables some degree of model conversion betwee
 focuses on core neural network operations, with limited support for other more general array processing functions such as high order optimization,
 signal processing, and advanced linear algebra.
 
-|ivy|
+Ivy |ivy|
 -----------
 
 The goal of Ivy is to be a comprehensive ML code conversion tool for all aspects of ML development, rather than solely focusing on deployment.

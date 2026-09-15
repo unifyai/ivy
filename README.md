@@ -1,36 +1,19 @@
-<div style="display: block;" align="center">
-    <a href="https://ivy-llc.github.io/docs/">
-        <picture>
-            <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/unifyai/ivy/main/assets/brand/ivy-docs-banner-dark.png">
-            <img class="dark-light" width="75%" alt="Ivy — convert machine learning code between frameworks" src="https://raw.githubusercontent.com/unifyai/ivy/main/assets/brand/ivy-docs-banner-light.png"/>
-        </picture>
-    </a>
-</div>
-<br clear="all" />
+<p align="center">
+  <a href="https://ivy-llc.github.io/docs/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/unifyai/ivy/main/assets/brand/ivy-docs-banner-dark.png">
+      <img src="https://raw.githubusercontent.com/unifyai/ivy/main/assets/brand/ivy-docs-banner-light.png" alt="ivy, a unify project. Convert machine learning code between frameworks." width="100%">
+    </picture>
+  </a>
+</p>
 
-<div style="margin-top: 10px; margin-bottom: 10px; display: block;" align="center">
-    <a href="https://github.com/ivy-llc/ivy/stargazers">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/github/stars/ivy-llc/ivy?color=2f9d97&labelColor=0a1410">
-    </a>
-    <a href="https://discord.gg/uYRmyPxMQq">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/discord/1220325004013604945?color=2f9d97&labelColor=0a1410&label=%20&logo=discord&logoColor=white">
-    </a>
-    <a href="https://ivy-llc.github.io/docs/">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/badge/docs-2f9d97?labelColor=0a1410">
-    </a>
-    <a href="https://github.com/ivy-llc/ivy/actions/workflows/test-transpiler.yml">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://github.com/ivy-llc/ivy/actions/workflows/test-transpiler.yml/badge.svg">
-    </a>
-    <a href="https://github.com/ivy-llc/ivy/actions/workflows/integration-tests.yml">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://github.com/ivy-llc/ivy/actions/workflows/integration-tests.yml/badge.svg">
-    </a>
-</div>
-<br clear="all" />
-
+<p align="center">
+  <a href="https://ivy-llc.github.io/docs/">Docs</a> · <a href="https://discord.gg/uYRmyPxMQq">Discord</a> · <a href="LICENSE">License</a>
+</p>
 
 # Convert Machine Learning Code Between Frameworks
 
-Ivy enables you to convert ML models, tools and libraries between frameworks using `ivy.transpile`
+ivy enables you to convert ML models, tools and libraries between frameworks using `ivy.transpile`
 
 <div style="display: block;" align="center">
     <div>
@@ -59,7 +42,7 @@ Ivy enables you to convert ML models, tools and libraries between frameworks usi
 
 # Installation
 
-The easiest way to install Ivy is using **pip**:
+The easiest way to install ivy is using **pip**:
 
 ``` bash
 pip install ivy
@@ -69,7 +52,7 @@ pip install ivy
 <summary><b>From Source</b></summary>
 <br clear="all" />
 
-You can also install Ivy from source if you want to take advantage of
+You can also install ivy from source if you want to take advantage of
 the latest changes:
 
 ``` bash
@@ -88,17 +71,17 @@ These are the frameworks that `ivy.transpile` currently supports conversions fro
 
 | Framework  | Source | Target |
 |------------|:------:|:------:|
-| PyTorch    |   ✅   |   🚧   |
-| TensorFlow |   🚧   |   ✅   |
-| JAX        |   🚧   |   ✅   |
-| NumPy      |   🚧   |   ✅   |
+| PyTorch    |   ✓   |   planned   |
+| TensorFlow |   planned   |   ✓   |
+| JAX        |   planned   |   ✓   |
+| NumPy      |   planned   |   ✓   |
 
 <br clear="all" />
 
 # Using ivy
 
-Here's some examples, to help you get started using Ivy! The [examples page](https://ivy-llc.github.io/docs/demos/examples_and_demos.html) also features a wide range of
-demos and tutorials showcasing some more use cases for Ivy.
+Here's some examples, to help you get started using ivy! The [examples page](https://ivy-llc.github.io/docs/demos/examples_and_demos.html) also features a wide range of
+demos and tutorials showcasing some more use cases for ivy.
 
   <details>
     <summary><b>Transpiling any code from one framework to another</b></summary>
@@ -146,7 +129,7 @@ demos and tutorials showcasing some more use cases for Ivy.
 <summary><b>How does ivy work?</b></summary>
 <br clear="all" />
 
-Ivy\'s transpiler allows you to use code from any other framework in your own code.
+ivy\'s transpiler allows you to use code from any other framework in your own code.
 Feel free to head over to the docs for the full API
 reference, but the functions you\'d most likely want to use are:
 
